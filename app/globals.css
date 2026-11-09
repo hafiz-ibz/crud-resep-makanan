@@ -1,0 +1,574 @@
+/*
+  Tema "Dapur Pandan"
+  Ganti warna di bawah ini untuk mengubah seluruh tampilan.
+  Warna kategori ada di lib/recipe.js.
+*/
+:root {
+  --bg: #e2eddc; /* daun pandan muda */
+  --surface: #f6faf1; /* kertas kartu resep */
+  --ink: #14291f; /* hijau tua hampir hitam */
+  --muted: #506456;
+  --line: #bfd1b9; /* garis kartu */
+  --accent: #f0b400; /* kunyit */
+  --danger: #b42318; /* sambal */
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ---------- Halaman ---------- */
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 20px 96px;
+}
+
+.masthead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding-bottom: 28px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--ink);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 8vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.lede {
+  max-width: 34ch;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+/* ---------- Tombol ---------- */
+.btn {
+  padding: 11px 20px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  background: var(--accent);
+}
+
+.btn.primary:hover:not(:disabled) {
+  background: #ffc61a;
+}
+
+.btn.ghost:hover:not(:disabled) {
+  background: var(--surface);
+}
+
+.btn.danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.btn.danger-ghost {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn.danger-ghost:hover {
+  background: #fdecea;
+}
+
+/* ---------- Cari dan saring ---------- */
+.tools {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.search input {
+  width: 100%;
+  max-width: 440px;
+  padding: 11px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 7px 14px;
+  border: 2px solid var(--tab);
+  border-radius: 999px;
+  background: transparent;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.chip::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--tab);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.count {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+/* ---------- Kartu resep ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 270px;
+  padding: 14px 18px 14px;
+  border: 1px solid var(--line);
+  border-top: 10px solid var(--tab);
+  border-radius: 4px 4px 12px 12px;
+  background: var(--surface);
+}
+
+.card:has(.card-open:focus-visible) {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--tab);
+}
+
+.card-time {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  margin: 0;
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.1;
+}
+
+.card-time b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.card h3 {
+  margin: 10px 0 10px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+.card-open {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Membuat seluruh kartu bisa diklik */
+.card-open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.card-open:focus-visible {
+  outline: none;
+}
+
+/* Garis seperti kartu resep tulisan tangan */
+.lines {
+  min-height: 112px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 28px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    var(--line) 27px,
+    var(--line) 28px
+  );
+}
+
+.lines li {
+  height: 28px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card-foot {
+  margin: auto 0 0;
+  padding-top: 12px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ---------- Kosong dan galat ---------- */
+.empty {
+  padding: 40px 0;
+  border-top: 2px dashed var(--line);
+}
+
+.empty h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 800;
+}
+
+.empty p {
+  max-width: 44ch;
+  margin: 8px 0 20px;
+  color: var(--muted);
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 2px solid var(--danger);
+  border-radius: 10px;
+  background: #fdecea;
+}
+
+.alert p {
+  margin: 0;
+}
+
+/* ---------- Panel resep ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(20, 41, 31, 0.5);
+}
+
+.drawer {
+  position: relative;
+  width: min(540px, 100%);
+  height: 100%;
+  padding: 28px 28px 40px;
+  overflow-y: auto;
+  border-left: 2px solid var(--ink);
+  background: var(--surface);
+  outline: none;
+  animation: slide-in 0.22s ease-out;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    animation: none;
+  }
+}
+
+.close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.view h2,
+.form h2 {
+  margin: 8px 0 18px;
+  padding-right: 48px;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.facts {
+  display: flex;
+  gap: 32px;
+  margin: 0 0 8px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.facts dt {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.view h3 {
+  margin: 26px 0 8px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.ingredients {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ingredients li {
+  position: relative;
+  padding: 8px 0 8px 22px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.ingredients li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--tab);
+  transform: translateY(-50%);
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 10px;
+  padding: 10px 0;
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.confirm {
+  margin-top: 28px;
+  padding: 16px;
+  border: 2px solid var(--danger);
+  border-radius: 10px;
+}
+
+.confirm p {
+  margin: 0;
+}
+
+.confirm .actions {
+  margin-top: 14px;
+}
+
+/* ---------- Formulir ---------- */
+.form label {
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.form input,
+.form select,
+.form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: #fff;
+  font-weight: 400;
+}
+
+.form textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.form small {
+  display: block;
+  margin-top: 4px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-error {
+  margin: 8px 0 0;
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* ---------- Notifikasi ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 30;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--surface);
+  font-weight: 600;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 28px 16px 80px;
+  }
+
+  .drawer {
+    padding: 24px 18px 32px;
+  }
+
+  .view h2,
+  .form h2 {
+    font-size: 1.8rem;
+  }
+}
